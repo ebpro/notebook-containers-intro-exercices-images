@@ -1,12 +1,6 @@
 name: CI — hello-java
 
-on:
-  push:
-    paths:
-      - 'notebook-containers-intro-exercices-images/**'
-  pull_request:
-    paths:
-      - 'notebook-containers-intro-exercices-images/**'
+on: [push]
 
 jobs:
   build:
