@@ -1,0 +1,71 @@
+name: CI — hello-java
+
+on:
+  push:
+    paths:
+      - 'notebook-containers-intro-exercices-images/**'
+  pull_request:
+    paths:
+      - 'notebook-containers-intro-exercices-images/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Build with Maven (mvnw)
+        working-directory: notebook-containers-intro-exercices-images/hello-java
+        run: |
+          chmod +x mvnw
+          ./mvnw -B -DskipTests package
+
+      - name: Smoke test - run App1
+        working-directory: notebook-containers-intro-exercices-images/hello-java
+        run: |
+          # run the simple App1 to ensure the artifact runs
+          java -cp "target/hello-java-0.0.1.jar:target/libs/*" app.App1
+
+      - name: Build Docker image (plain Dockerfile)
+        working-directory: notebook-containers-intro-exercices-images/hello-java
+        run: |
+          docker build -f Dockerfile -t hello-java:plain .
+
+      - name: Build Docker image (arg/env variant)
+        working-directory: notebook-containers-intro-exercices-images/hello-java
+        run: |
+          # bake the current commit into the image
+          docker build -f Dockerfile.arg_env --build-arg GIT_COMMIT=${{ github.sha }} -t hello-java:env .
+
+      - name: Build Docker image (multi-stage)
+        working-directory: notebook-containers-intro-exercices-images/hello-java
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          DOCKER_BUILDKIT=1 docker build -f Dockerfile.multistage -t hello-java:multi .
+
+      - name: Run container - plain image
+        working-directory: notebook-containers-intro-exercices-images/hello-java
+        run: |
+          docker run --rm hello-java:plain
+
+      - name: Run container - arg/env image (shows GIT_COMMIT baked, LOG_LEVEL overridable)
+        working-directory: notebook-containers-intro-exercices-images/hello-java
+        run: |
+          docker run --rm hello-java:env || true
+          # also test overriding LOG_LEVEL at runtime
+          docker run --rm -e LOG_LEVEL=DEBUG hello-java:env || true
+
+      - name: Run container - multi-stage image
+        working-directory: notebook-containers-intro-exercices-images/hello-java
+        run: |
+          docker run --rm hello-java:multi || true
+          docker run --rm -e NAME=Pierre hello-java:multi || true
