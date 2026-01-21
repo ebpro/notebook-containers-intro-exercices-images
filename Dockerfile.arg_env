@@ -1,0 +1,26 @@
+FROM eclipse-temurin:21-jdk
+
+WORKDIR /app
+
+# Définir une variable d’argument pour le commit Git
+ARG GIT_COMMIT="unknown"
+
+# Pour rendre la variable d’argument disponible en tant que variable d’environnement
+# Il est alors possible de la surcharger au runtime avec --env
+# ENV GIT_COMMIT=${GIT_COMMIT}
+
+# inscrire la valeur dans un fichier dans l'image qui pourra être lue par l'application
+RUN printf '%s' "${GIT_COMMIT}" > /app/GIT_COMMIT
+
+# Ajouter un label avec le commit Git dans les métadonnées de l’image
+LABEL git.commit="${GIT_COMMIT}"
+
+# Configuration dynamique du conteneur
+ENV LOG_LEVEL=INFO
+
+
+COPY . .
+
+RUN ./mvnw -q package
+
+CMD ["java", "-cp", "target/hello-java-0.0.1.jar", "app.App2"]

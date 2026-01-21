@@ -1,0 +1,61 @@
+# =========================
+# Étape 1 : build Maven
+# =========================
+
+# Image de base avec JDK (nécessaire pour compiler)
+FROM eclipse-temurin:21-jdk AS build
+
+# Répertoire de travail dans le conteneur
+WORKDIR /app
+
+# Copier uniquement les fichiers Maven (pour optimiser le cache Docker)
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+
+# Télécharger les dépendances dans le cache Maven
+# (cache persistant entre builds grâce à BuildKit)
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw -q dependency:go-offline
+
+# Copier le code source (après les dépendances pour optimiser le cache)
+COPY src src
+
+# Compiler le projet et générer :
+# - le JAR de l'application
+# - le dossier libs/ contenant les dépendances
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw -q package -DskipTests
+
+
+# =========================
+# Étape 2 : image runtime
+# =========================
+
+# Image plus légère avec uniquement le JRE
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+# Copier le JAR principal depuis l'étape build
+COPY --from=build /app/target/hello-java-*.jar app.jar
+
+# Copier les dépendances dans un dossier libs/
+COPY --from=build /app/target/libs libs
+
+# Script d'entrée
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Best practice: run as non-root user
+RUN useradd -m appuser
+USER appuser
+
+# Variable d'environnement exemple
+ENV NAME=World
+
+# Lancer l'application avec un classpath composé :
+# - du JAR principal
+# - de toutes les libs dans le dossier libs/
+ENV MAIN_CLASS=app.App3
+
+ENTRYPOINT ["/app/entrypoint.sh"]

@@ -1,0 +1,77 @@
+Compiled class files
+*.class
+
+Log files
+*.log
+
+BlueJ files
+*.ctxt
+
+Package files
+*.jar
+*.war
+*.ear
+
+Maven
+/target/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+/pom.xml.next
+/release.properties
+/dependency-reduced-pom.xml
+/buildNumber.properties
+
+Maven local repository (if accidentally committed)
+.m2/
+
+Gradle
+/.gradle/
+/build/
+
+Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+bin/
+
+IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+VS Code
+.vscode/
+
+OS files
+.DS_Store
+Thumbs.db
+
+Temporary files
+tmp/
+temp/
+*.tmp
+
+Package manager directories
+node_modules/
+
+Coverage / reports
+coverage/
+jacoco-report/
+
+Docker / containers
+docker-compose.override.yml
+.env
+
+Misc
+hs_err_pid*
+logs/
+.log.
