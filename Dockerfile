@@ -8,7 +8,11 @@ WORKDIR /app
 COPY . .
 
 # Construire l'application avec Maven Wrapper
-RUN ./mvnw -q package
+RUN ./mvnw package -Pprod
 
 # Définir la commande de démarrage
-CMD ["java", "-jar", "target/hello-java-0.0.1.jar"]
+
+# Il est plus propre d'utiliser la syntaxe json comme nous le ferons plus tard
+# mais pour faire simple ici nous utilisons la syntaxe shell qui support les les variables d'environnement et le globbing (*)
+
+CMD java -jar target/hello-java-*.jar

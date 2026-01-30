@@ -18,9 +18,9 @@ LABEL git.commit="${GIT_COMMIT}"
 # Configuration dynamique du conteneur
 ENV LOG_LEVEL=INFO
 
-
 COPY . .
 
-RUN ./mvnw -q package
+RUN ./mvnw package -Pprod
 
-CMD ["java", "-cp", "target/hello-java-0.0.1.jar", "app.App2"]
+CMD java -cp target/hello-java-*.jar app.App2
+

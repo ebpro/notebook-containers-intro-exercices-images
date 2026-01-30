@@ -24,7 +24,7 @@ COPY src src
 # - le JAR de l'application
 # - le dossier libs/ contenant les dépendances
 RUN --mount=type=cache,target=/root/.m2 \
-    ./mvnw -q package -DskipTests
+    ./mvnw package -Pprod -DskipTests
 
 
 # =========================

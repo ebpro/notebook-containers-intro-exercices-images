@@ -20,10 +20,10 @@
 
     <!-- Coordonnées du projet -->
     <groupId>fr.univtln.bruno.demos.docker</groupId>
-    <artifactId>hello-world</artifactId>
+    <artifactId>hello-java</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 
-    <name>Hello World</name>
+    <name>Hello Java</name>
     <description>
         Application Java "Hello World" utilisée pour démontrer Maven et Docker
     </description>
@@ -174,7 +174,7 @@
                     <!--
                       Résultat :
                       target/
-                        ├── hello-world.jar
+                        ├── hello-java-XXX.jar
                         └── libs/
                             ├── logback.jar
                             └── slf4j.jar
