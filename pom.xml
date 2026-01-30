@@ -47,7 +47,7 @@
         <java.version>21</java.version>
 
         <!-- Classe principale de l'application -->
-        <main.class>fr.univtln.bruno.demos.docker.App</main.class>
+        <main.class>app.App1</main.class>
 
         <!-- Dépendances -->
         <junit.version>5.11.4</junit.version>
