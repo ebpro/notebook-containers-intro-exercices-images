@@ -1,5 +1,5 @@
 # Définir l'image de base
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:25-jdk
 
 # Definir le répertoire de travail
 WORKDIR /app
