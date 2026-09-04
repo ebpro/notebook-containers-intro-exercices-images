@@ -61,6 +61,10 @@
         <maven.dependency.version>3.6.1</maven.dependency.version>
         <versions.maven.version>2.21.0</versions.maven.version>
 
+        <!-- Analyse SonarQube et couverture JaCoCo (profil "sonar") -->
+        <sonar.maven.plugin.version>5.5.0.6356</sonar.maven.plugin.version>
+        <jacoco.maven.plugin.version>0.8.14</jacoco.maven.plugin.version>
+
     </properties>
 
     <!-- ===================================================== -->
@@ -228,6 +232,52 @@
                         </configuration>
                     </plugin>
 
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- ================================================= -->
+        <!-- Profil SonarQube (activé avec -Psonar)            -->
+        <!-- Analyse SonarQube + couverture JaCoCo.            -->
+        <!-- Variables requises : SONAR_URL, SONAR_TOKEN       -->
+        <!-- ================================================= -->
+        <profile>
+            <id>sonar</id>
+            <properties>
+                <sonar.host.url>${SONAR_URL}</sonar.host.url>
+                <sonar.token>${SONAR_TOKEN}</sonar.token>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.maven.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <formats>
+                                        <format>XML</format>
+                                    </formats>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>${sonar.maven.plugin.version}</version>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
