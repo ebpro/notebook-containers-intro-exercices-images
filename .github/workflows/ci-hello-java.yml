@@ -9,24 +9,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '25'
           cache: 'maven'
 
       - name: Build with Maven (mvnw)
         working-directory: .
         run: |
           chmod +x mvnw
-          ./mvnw -B -DskipTests package
+          ./mvnw -B -DskipTests -Pprod package
 
       - name: Smoke test - run App1
         working-directory: .
         run: |
           # run the simple App1 to ensure the artifact runs
-          java -cp "target/hello-java-0.0.1.jar:target/libs/*" app.App1
+          java -cp "target/hello-java-0.1.0-SNAPSHOT.jar:target/libs/*" app.App1
 
       - name: Build Docker image (plain Dockerfile)
         working-directory: .
